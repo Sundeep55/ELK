@@ -32,9 +32,9 @@ pipeline {
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'gitauth',
                     usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD']]) {
                     load "${WORKSPACE}/.env"
-                    sh "docker build -t ${DOCKER_HUB_REPO}/elasticsearch:${ELK_VERSION} elasticsearch/"
-                    sh "docker build -t ${DOCKER_HUB_REPO}/logstash:${ELK_VERSION} logstash/"
-                    sh "docker build -t ${DOCKER_HUB_REPO}/kibana:${ELK_VERSION} kibana/"
+                    sh "docker build -t ${DOCKER_HUB_REPO}/elasticsearch:${ELK_VERSION} elasticsearch/ --build-arg ELK_VERSION=${ELK_VERSION}"
+                    sh "docker build -t ${DOCKER_HUB_REPO}/logstash:${ELK_VERSION} logstash/ --build-arg ELK_VERSION=${ELK_VERSION}"
+                    sh "docker build -t ${DOCKER_HUB_REPO}/kibana:${ELK_VERSION} kibana/ --build-arg ELK_VERSION=${ELK_VERSION}"
                     sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
                     sh "docker push ${DOCKER_HUB_REPO}/elasticsearch:${ELK_VERSION}"
                     sh "docker build ${DOCKER_HUB_REPO}/logstash:${ELK_VERSION}"
