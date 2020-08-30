@@ -1,1 +1,1 @@
-# ELK
+# ELK Stack
