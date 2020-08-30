@@ -1,6 +1,19 @@
 pipeline {
     agent any
     stages {
+        stage ('SonarQube') {
+            environment {
+                scannerHome = tool 'SonarQube'
+            }
+            steps { 
+                withSonarQubeEnv('sonarserver') {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
         stage('Build') {
             steps {
                 sh 'docker-compose build'
@@ -22,21 +35,26 @@ pipeline {
         stage('Push to registry') {
             when {
                 expression {
-                    GIT_BRANCH == 'origin/master'
+                    GIT_BRANCH == 'origin/master1' //Chnage me later
                 }
             }
             steps {
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'dockerhub',
                     usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD']]) {
                     load "${WORKSPACE}/.env"
-                    sh "docker build -t ${DOCKER_USERNAME}/elasticsearch:${ELK_VERSION} elasticsearch/ --build-arg ELK_VERSION=${ELK_VERSION}"
-                    sh "docker build -t ${DOCKER_USERNAME}/logstash:${ELK_VERSION} logstash/ --build-arg ELK_VERSION=${ELK_VERSION}"
-                    sh "docker build -t ${DOCKER_USERNAME}/kibana:${ELK_VERSION} kibana/ --build-arg ELK_VERSION=${ELK_VERSION}"
+                    sh "docker build -t ${DOCKER_USERNAME}/elk_cluster_elasticsearch:${ELK_VERSION} elasticsearch/ --build-arg ELK_VERSION=${ELK_VERSION}"
+                    sh "docker build -t ${DOCKER_USERNAME}/elk_cluster_logstash:${ELK_VERSION} logstash/ --build-arg ELK_VERSION=${ELK_VERSION}"
+                    sh "docker build -t ${DOCKER_USERNAME}/elk_cluster_kibana:${ELK_VERSION} kibana/ --build-arg ELK_VERSION=${ELK_VERSION}"
                     sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
-                    sh "docker push ${DOCKER_USERNAME}/elasticsearch:${ELK_VERSION}"
-                    sh "docker push ${DOCKER_USERNAME}/logstash:${ELK_VERSION}"
-                    sh "docker push ${DOCKER_USERNAME}/kibana:${ELK_VERSION}"
+                    sh "docker push ${DOCKER_USERNAME}/elk_cluster_elasticsearch:${ELK_VERSION}"
+                    sh "docker push ${DOCKER_USERNAME}/elk_cluster_logstash:${ELK_VERSION}"
+                    sh "docker push ${DOCKER_USERNAME}/elk_cluster_kibana:${ELK_VERSION}"
                 }
+            post {
+                cleanup {
+                    sh "docker logout"
+                }
+            }
             }
         }
         stage('Deploy in QA') {
