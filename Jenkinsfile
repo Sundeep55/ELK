@@ -10,7 +10,7 @@ pipeline {
         stage('Functional Test') {
             steps {
                 sh 'docker-compose up -d'
-                sleep(time:1,unit:"MINUTES")
+                sleep(time:2,unit:"MINUTES")
                 sh 'pytest'
             }
             post {
