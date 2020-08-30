@@ -25,20 +25,17 @@ pipeline {
                     GIT_BRANCH == 'origin/master'
                 }
             }
-            environment {
-                DOCKER_HUB_REPO = 'sundeep55'
-            }
             steps {
-                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'gitauth',
+                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'dockerhub',
                     usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD']]) {
                     load "${WORKSPACE}/.env"
-                    sh "docker build -t ${DOCKER_HUB_REPO}/elasticsearch:${ELK_VERSION} elasticsearch/ --build-arg ELK_VERSION=${ELK_VERSION}"
-                    sh "docker build -t ${DOCKER_HUB_REPO}/logstash:${ELK_VERSION} logstash/ --build-arg ELK_VERSION=${ELK_VERSION}"
-                    sh "docker build -t ${DOCKER_HUB_REPO}/kibana:${ELK_VERSION} kibana/ --build-arg ELK_VERSION=${ELK_VERSION}"
+                    sh "docker build -t ${DOCKER_USERNAME}/elasticsearch:${ELK_VERSION} elasticsearch/ --build-arg ELK_VERSION=${ELK_VERSION}"
+                    sh "docker build -t ${DOCKER_USERNAME}/logstash:${ELK_VERSION} logstash/ --build-arg ELK_VERSION=${ELK_VERSION}"
+                    sh "docker build -t ${DOCKER_USERNAME}/kibana:${ELK_VERSION} kibana/ --build-arg ELK_VERSION=${ELK_VERSION}"
                     sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
-                    sh "docker push ${DOCKER_HUB_REPO}/elasticsearch:${ELK_VERSION}"
-                    sh "docker build ${DOCKER_HUB_REPO}/logstash:${ELK_VERSION}"
-                    sh "docker build ${DOCKER_HUB_REPO}/kibana:${ELK_VERSION}"
+                    sh "docker push ${DOCKER_USERNAME}/elasticsearch:${ELK_VERSION}"
+                    sh "docker push ${DOCKER_USERNAME}/logstash:${ELK_VERSION}"
+                    sh "docker push ${DOCKER_USERNAME}/kibana:${ELK_VERSION}"
                 }
             }
         }
