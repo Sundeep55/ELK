@@ -12,7 +12,11 @@ pipeline {
                 sh 'docker-compose up -d'
                 sleep(time:1,unit:"MINUTES")
                 sh 'pytest'
-                sh 'docker-compose down'
+            }
+            post {
+                cleanup {
+                    sh 'docker-compose down'
+                }
             }
         }
         stage('Push to registry') {
