@@ -43,9 +43,6 @@ pipeline {
             }
         }
         stage('Deploy in QA') {
-            agent {
-                label "QA"
-            }
             when {
                 beforeAgent true
                 expression {
@@ -53,7 +50,8 @@ pipeline {
                 }
             }
             steps {
-                input 'Deploy to Production?'
+                // input 'Deploy to Production?'
+                sh(script: 'ls')
             }
         }
         stage('production') {
