@@ -29,7 +29,7 @@ pipeline {
                 sleep(time:10,unit:"SECONDS")
             }
         }
-        stage('Functional Test') {
+        stage('Test') {
                         when {
                 expression {
                     GIT_BRANCH == 'origin/master'
@@ -97,6 +97,7 @@ pipeline {
         }
         stage('production') {
             when {
+                beforeAgent true
                 expression {
                     GIT_BRANCH == 'origin/master'
                 }
