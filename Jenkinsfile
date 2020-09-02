@@ -56,9 +56,6 @@ pipeline {
                     sh "docker push ${DOCKER_USERNAME}/elk_cluster_elasticsearch:${ELK_VERSION}"
                     sh "docker push ${DOCKER_USERNAME}/elk_cluster_logstash:${ELK_VERSION}"
                     sh "docker push ${DOCKER_USERNAME}/elk_cluster_kibana:${ELK_VERSION}"
-                    sh "docker push ${DOCKER_USERNAME}/elk_cluster_elasticsearch:${SHA}"
-                    sh "docker push ${DOCKER_USERNAME}/elk_cluster_logstash:${SHA}"
-                    sh "docker push ${DOCKER_USERNAME}/elk_cluster_kibana:${SHA}"
                 }
             }
             post {
