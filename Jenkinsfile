@@ -21,13 +21,13 @@ pipeline {
                               -X POST \
                               -d '{"state": "pending","context": "continuous-integration/jenkins", "description": "Jenkins", "target_url": "http://15.207.4.186:8080/job/ELKStack/${BUILD_NUMBER}/console"}' """)
                 sh 'docker-compose build'
-                sleep(time:30,unit:"SECONDS")
+                sleep(time:10,unit:"SECONDS")
             }
         }
         stage('Functional Test') {
             steps {
                 sh 'docker-compose up -d'
-                sleep(time:2,unit:"MINUTES")
+                sleep(time:90,unit:"SECONDS")
                 sh 'pytest'
             }
             post {
