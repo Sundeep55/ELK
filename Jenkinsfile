@@ -45,7 +45,9 @@ pipeline {
             steps {
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'dockerhub',
                     usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD']]) {
-                    SHA = sh(returnStdout: true, script: 'git rev-parse HEAD')
+                    script {
+                        SHA = sh(returnStdout: true, script: 'git rev-parse HEAD')
+                    }
                     load "${WORKSPACE}/.env"
                     sh "docker build -t ${DOCKER_USERNAME}/elk_cluster_elasticsearch:${ELK_VERSION} -t ${DOCKER_USERNAME}/elk_cluster_elasticsearch:${SHA} elasticsearch/ --build-arg ELK_VERSION=${ELK_VERSION}"
                     sh "docker build -t ${DOCKER_USERNAME}/elk_cluster_logstash:${ELK_VERSION} -t ${DOCKER_USERNAME}/elk_cluster_logstash:${SHA} logstash/ --build-arg ELK_VERSION=${ELK_VERSION}"
