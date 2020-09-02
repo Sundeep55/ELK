@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: elasticsearch
+  template:
+    metadata:
+      labels:
+        component: elasticsearch
+    spec:
+      volumes:
+        - name: elasticsearch-volume
+          persistentVolumeClaim:
+            claimName: elasticsearch-pvc
+        - name: elasticsearch-config
+          configMap:
+            name: elasticsearch-configmap
+            items: 
+            - key: elasticsearch.yml
+              path: elasticsearch.yml
+      containers:
+        - name: elasticsearch
+          image: "sundeep55/elk_cluster_elasticsearch:7.5.2"
+          ports:
+            - containerPort: 9200
+          volumeMounts:
+            - name: elasticsearch-volume
+              mountPath: /usr/share/elasticsearch/data
+            - name: elasticsearch-config
+              mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+              subPath: elasticsearch.yml

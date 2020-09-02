@@ -1,0 +1,43 @@
+---
+- name: check if docker exists
+  command: which docker 
+  register: docker_stat
+  ignore_errors: yes
+    
+- name: install docker if not already installed
+  block:
+    - name: update cache
+      apt:
+        update_cache: yes
+
+    - name: install apt-transport-https, ca-certificates, curl, gnupg-agent and software-properties-common
+      apt:
+        name:
+          - apt-transport-https 
+          - ca-certificates
+          - curl
+          - gnupg-agent
+          - software-properties-common
+
+    - name: Add docker official GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: add docker repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+    
+    - name: update cache
+      apt:
+        update_cache: yes
+
+    - name: install kubectl
+      apt:
+        name: 
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+  when: docker_stat.stdout == ""
+    

@@ -1,0 +1,7 @@
+AWS_AMI: ami-02b5fbc2cb28b77b8
+AWS_SUBNET: subnet-8b07b3c7
+AWS_INSTANCE_TYPE: t2.medium
+AWS_EBS_SIZE: 40
+AWS_EBS_TYPE: gp2
+AWS_KEY_PAIR: jenkinskeypair
+AWS_REGION: ap-south-1

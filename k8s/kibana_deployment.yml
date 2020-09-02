@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: kibana
+  template:
+    metadata:
+      labels:
+        component: kibana
+    spec:
+      volumes:
+        - name: kibana-config
+          configMap:
+            name: kibana-configmap
+            items:
+            - key: kibana.yml
+              path: kibana.yml
+      containers:
+        - name: kibana
+          image: "sundeep55/elk_cluster_kibana:7.5.2"
+          ports:
+            - containerPort: 5601
+          volumeMounts:
+            - name: kibana-config
+              mountPath: /usr/share/kibana/config/kibana.yml
+              subPath: kibana.yml
