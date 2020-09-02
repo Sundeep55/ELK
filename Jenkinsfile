@@ -77,8 +77,15 @@ pipeline {
             steps {
                 sh "minikube start --driver=docker"
                 sh "kubectl apply -f k8s/"
-                // input 'Deploy to Production?'
-                sh(script: 'ls')
+                sleep(time:120,unit:"SECONDS")
+                input 'Deploy to Production?'
+            }
+            post {
+                cleanup {
+                    sh "kubectl delete -f k8s/"
+                    sh "minikube stop"
+                    sh "minikube delete"
+                }
             }
         }
         stage('production') {
@@ -88,7 +95,9 @@ pipeline {
                 }
             }
             steps {
-                sh(script: 'ls')
+                ansiblePlaybook('ansible/deploy_instance.yml') {
+                    inventoryPath('inventory.ini')
+                }
             }
         }
     }

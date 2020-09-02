@@ -1,0 +1,6 @@
+---
+- name: Start minikube cluster
+  shell: "{{ item }}"
+  loop:
+    - minikube start --driver=docker
+    - kubectl apply -f /home/ubuntu/k8s/

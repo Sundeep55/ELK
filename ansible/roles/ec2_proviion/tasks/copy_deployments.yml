@@ -1,0 +1,5 @@
+---
+- name: copy k8s files to ec2 instance
+  copy:
+    src: "{{ playbook_dir }}/../k8s/"
+    dest: /home/ubuntu/k8s/
