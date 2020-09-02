@@ -103,9 +103,7 @@ pipeline {
             }
             steps {
                 dir('ansible') {
-                    ansiblePlaybook('deploy_instance.yml') {
-                        inventoryPath('inventory.ini')
-                    }
+                    ansiblePlaybook playbook: 'deploy_instance.yml', inventory: 'inventory.ini'
                 }
             }
         }
