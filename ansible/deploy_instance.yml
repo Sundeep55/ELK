@@ -2,7 +2,7 @@
 - hosts: localhost
   connection: local
   gather_facts: false
-  vars_file:
+  vars_files:
     - vars/all.yml
   tasks:
     - name: Validate if required variables are present in environment

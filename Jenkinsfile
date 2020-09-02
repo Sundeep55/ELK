@@ -15,6 +15,11 @@ pipeline {
         //     }
         // }
         stage('Build') {
+                        when {
+                expression {
+                    GIT_BRANCH == 'origin/master1' //Chnage me later
+                }
+            }
             steps {
                 sh(script:  """curl "https://api.github.com/repos/Sundeep55/ELK/statuses/${GIT_COMMIT}?access_token=34d6c62a303e5a3560f5c43765ca1e385c81ff07" \
                               -H "Content-Type: application/json" \
@@ -25,6 +30,11 @@ pipeline {
             }
         }
         stage('Functional Test') {
+                        when {
+                expression {
+                    GIT_BRANCH == 'origin/master1' //Chnage me later
+                }
+            }
             steps {
                 sh 'docker-compose up -d'
                 sleep(time:90,unit:"SECONDS")
@@ -39,7 +49,7 @@ pipeline {
         stage('Push to registry') {
             when {
                 expression {
-                    GIT_BRANCH == 'origin/master' //Chnage me later
+                    GIT_BRANCH == 'origin/master1' //Chnage me later
                 }
             }
             steps {
@@ -68,7 +78,7 @@ pipeline {
             when {
                 beforeAgent true
                 expression {
-                    GIT_BRANCH == 'origin/master'
+                    GIT_BRANCH == 'origin/master1' //Chnage me later
                 }
             }
             steps {
@@ -92,8 +102,10 @@ pipeline {
                 }
             }
             steps {
-                ansiblePlaybook('ansible/deploy_instance.yml') {
-                    inventoryPath('inventory.ini')
+                dir('ansible') {
+                    ansiblePlaybook('deploy_instance.yml') {
+                        inventoryPath('inventory.ini')
+                    }
                 }
             }
         }
