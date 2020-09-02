@@ -1,0 +1,33 @@
+---
+- name: spin up ec2 instance
+  ec2:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    image: "{{ AWS_AMI }}"
+    volumes:
+      - device_name: /dev/xvda
+        volume_type: "{{ AWS_EBS_TYPE }}"
+        volume_size: "{{ AWS_EBS_SIZE }}"
+    instance_tags:
+      name: "{{ elkhostname }}"
+      component: elk
+    instance_type: "{{ AWS_INSTANCE_TYPE }}"
+    key_name: "{{ AWS_KEY_PAIR }}"
+    region: "{{ AWS_REGION }}" 
+    vpc_subnet_id: "{{ AWS_SUBNET }}"
+    wait: yes
+    assign_public_ip: yes
+  register: ec2
+
+- name: Add new instance to host group
+  add_host:
+    hostname: "{{ item.public_ip }}"
+    groupname: elkhosts
+  loop: "{{ ec2.instances }}"
+
+- name: Wait for SSH to come up
+  delegate_to: "{{ item.public_dns_name }}"
+  wait_for_connection:
+    delay: 60
+    timeout: 320
+  loop: "{{ ec2.instances }}"

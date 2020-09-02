@@ -1,0 +1,31 @@
+---
+- name: check if minikube exists
+  command: which minikube 
+  register: minikube_stat
+  ignore_errors: yes
+
+- name: install minikube if not already installed
+  block:
+  - name: create a temporary directory
+    file:
+      path: /tmp/minikube_download
+      state: directory
+
+  - name: download minikube
+    get_url:
+      url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+      dest: /tmp/minikube_download
+
+  - name: copy minikube to bin
+    command: cp /tmp/minikube_download/minikube-linux-amd64 /usr/local/bin/minikube
+
+  - name: set file permissions
+    file:
+      path: /usr/local/bin/minikube
+      mode: '0755'
+
+  - name: delete temporary directory
+    file:
+      path: /tmp/minikube_download
+      state: absent
+  when: minikube_stat.stdout == ""

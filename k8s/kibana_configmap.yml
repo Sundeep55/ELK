@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kibana-configmap
+data:
+  kibana.yml: |
+    server.name: kibana
+    server.host: 0.0.0.0
+    elasticsearch.hosts: [ "http://elasticsearch-service:9200" ]
+    xpack.monitoring.ui.container.elasticsearch.enabled: true

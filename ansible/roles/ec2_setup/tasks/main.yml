@@ -1,0 +1,1 @@
+- include_task: spin_up_vm.yml
