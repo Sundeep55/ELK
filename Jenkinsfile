@@ -17,7 +17,7 @@ pipeline {
         stage('Build') {
                         when {
                 expression {
-                    GIT_BRANCH == 'origin/master1' //Chnage me later
+                    GIT_BRANCH == 'origin/master'
                 }
             }
             steps {
@@ -32,7 +32,7 @@ pipeline {
         stage('Functional Test') {
                         when {
                 expression {
-                    GIT_BRANCH == 'origin/master1' //Chnage me later
+                    GIT_BRANCH == 'origin/master'
                 }
             }
             steps {
@@ -49,7 +49,7 @@ pipeline {
         stage('Push to registry') {
             when {
                 expression {
-                    GIT_BRANCH == 'origin/master1' //Chnage me later
+                    GIT_BRANCH == 'origin/master'
                 }
             }
             steps {
@@ -78,7 +78,7 @@ pipeline {
             when {
                 beforeAgent true
                 expression {
-                    GIT_BRANCH == 'origin/master1' //Chnage me later
+                    GIT_BRANCH == 'origin/master'
                 }
             }
             steps {

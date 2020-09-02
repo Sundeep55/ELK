@@ -33,11 +33,14 @@
       apt:
         update_cache: yes
 
-    - name: install kubectl
+    - name: install docker
       apt:
         name: 
           - docker-ce
           - docker-ce-cli
           - containerd.io
+
+    - name: add ubuntu user to docker group
+      shell: usermod -aG docker ubuntu && newgrp docker
   when: docker_stat.stdout == ""
     

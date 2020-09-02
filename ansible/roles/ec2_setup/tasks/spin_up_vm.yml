@@ -5,11 +5,12 @@
     aws_secret_key: "{{ aws_secret_key }}"
     image: "{{ AWS_AMI }}"
     volumes:
-      - device_name: /dev/xvda
+      - device_name: /dev/sda1
         volume_type: "{{ AWS_EBS_TYPE }}"
         volume_size: "{{ AWS_EBS_SIZE }}"
+        delete_on_termination: true
     instance_tags:
-      name: "{{ elkhostname }}"
+      Name: "{{ elkhostname }}"
       component: elk
     instance_type: "{{ AWS_INSTANCE_TYPE }}"
     key_name: "{{ AWS_KEY_PAIR }}"

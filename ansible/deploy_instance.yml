@@ -1,7 +1,6 @@
 ---
 - hosts: localhost
   connection: local
-  gather_facts: false
   vars_files:
     - vars/all.yml
   tasks:
@@ -20,21 +19,24 @@
     - name: read deploy yaml
       include_vars:
         name: deploy_host_names
-        dir: ../deploy_config.yaml
+        file: ../deploy_config.yml
 
     - include_role: 
         name: ec2_setup
-      loop: "{{deploy_host_names}}"
+      loop: "{{deploy_host_names['hosts']}}"
       loop_control:
-        loop_var: 
+        loop_var: elkhostname
 
 - hosts: elkhosts
   gather_facts: false
-  # become: true
   vars:
     ansible_ssh_user: ubuntu
     ansible_ssh_private_key_file: /opt/secrets/jenkinskeypair.pem
   roles:
-    - ec2_provision
-    - kube_init
+    - role: ec2_provision
+      vars:
+        become: true
+    - role: kube_init
+      vars:
+        become: false
       

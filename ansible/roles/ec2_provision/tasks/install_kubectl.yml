@@ -21,6 +21,12 @@
         url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
         state: present
 
+    - name: Add kubectl packge repo to packages list
+      lineinfile:
+        insertafter: EOF
+        line: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+        path: /etc/apt/sources.list.d/kubernetes.list
+
     - name: update cache
       apt:
         update_cache: yes
