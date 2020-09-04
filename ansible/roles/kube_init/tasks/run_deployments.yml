@@ -3,4 +3,6 @@
   shell: "{{ item }}"
   loop:
     - minikube start --driver=docker
+    - minikube addons enable ingress
+    - kubectl wait --namespace kube-system --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s
     - kubectl apply -f /home/ubuntu/k8s/

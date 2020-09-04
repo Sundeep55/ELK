@@ -1,20 +1,13 @@
 ---
 - hosts: localhost
   connection: local
-  gather_facts: true
   vars_files:
     - vars/all.yml
   tasks:
-    - name: Validate if required variables are present in environment
+    - name: Validate if required variables are available
       fail:
         msg: AWS_ACCESS_KEY or AWS_SECRET_KEY not defined
-      when: "'AWS_ACCESS_KEY' not in ansible_env or 'AWS_SECRET_KEY' not in ansible_env"
-      no_log: true
-
-    - name: Set variables
-      set_fact:
-        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
-        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_KEY') }}"
+      when: aws_access_key is not defined or aws_secret_key is not defined
       no_log: true
 
     - name: read deploy yaml

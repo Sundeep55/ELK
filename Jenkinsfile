@@ -1,19 +1,6 @@
 pipeline {
     agent any
     stages {
-        // stage ('SonarQube Scan') {
-        //     environment {
-        //         scannerHome = tool 'SonarQube'
-        //     }
-        //     steps { 
-        //         withSonarQubeEnv('sonarserver') {
-        //             sh "${scannerHome}/bin/sonar-scanner"
-        //         }
-        //         timeout(time: 10, unit: 'MINUTES') {
-        //             waitForQualityGate abortPipeline: true
-        //         }
-        //     }
-        // }
         stage('Build') {
                         when {
                 expression {
@@ -47,11 +34,6 @@ pipeline {
             }
         }
         stage('Push to registry') {
-            when {
-                expression {
-                    GIT_BRANCH == 'origin/master'
-                }
-            }
             steps {
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'dockerhub',
                     usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD']]) {
@@ -75,14 +57,10 @@ pipeline {
             }
         }
         stage('Deploy in QA') {
-            when {
-                beforeAgent true
-                expression {
-                    GIT_BRANCH == 'origin/master'
-                }
-            }
             steps {
                 sh "minikube start --driver=docker"
+                sh "minikube addons enable ingress"
+                sh "kubectl wait --namespace kube-system --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s"
                 sh "kubectl apply -f k8s/"
                 sleep(time:120,unit:"SECONDS")
                 input 'Deploy to Production?'
@@ -103,8 +81,13 @@ pipeline {
                 }
             }
             steps {
-                dir('ansible') {
-                    ansiblePlaybook playbook: 'deploy_instance.yml', inventory: 'inventory.ini'
+                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'awscreds',
+                    usernameVariable: 'AWS_ACCESS_KEY', passwordVariable: 'AWS_SECRET_KEY']]) {
+                    dir('ansible') {
+                        ansiblePlaybook playbook: 'deploy_instance.yml', 
+                                        inventory: 'inventory.ini',
+                                        extras: "-e aws_access_key=${AWS_ACCESS_KEY} aws_secret_key=${AWS_SECRET_KEY}"
+                    }
                 }
             }
         }
