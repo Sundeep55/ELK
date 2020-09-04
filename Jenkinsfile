@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment { 
+        GIT_TOCKEN = credentials('github_tocken') 
+    }
     stages {
         stage('Build') {
                         when {
@@ -8,7 +11,7 @@ pipeline {
                 }
             }
             steps {
-                sh(script:  """curl "https://api.github.com/repos/Sundeep55/ELK/statuses/${GIT_COMMIT}?access_token=34d6c62a303e5a3560f5c43765ca1e385c81ff07" \
+                sh(script:  """curl "https://api.github.com/repos/Sundeep55/ELK/statuses/${GIT_COMMIT}?access_token=${GIT_TOCKEN}" \
                               -H "Content-Type: application/json" \
                               -X POST \
                               -d '{"state": "pending","context": "continuous-integration/jenkins", "description": "Jenkins", "target_url": "http://15.207.4.186:8080/job/ELKStack/${BUILD_NUMBER}/console"}' """)
@@ -94,19 +97,19 @@ pipeline {
     }
     post {
         success {
-            sh(script:  """curl "https://api.github.com/repos/Sundeep55/ELK/statuses/${GIT_COMMIT}?access_token=34d6c62a303e5a3560f5c43765ca1e385c81ff07" \
+            sh(script:  """curl "https://api.github.com/repos/Sundeep55/ELK/statuses/${GIT_COMMIT}?access_token=${GIT_TOCKEN}" \
                             -H "Content-Type: application/json" \
                             -X POST \
                             -d '{"state": "success","context": "continuous-integration/jenkins", "description": "Jenkins", "target_url": "http://15.207.4.186:8080/job/ELKStack/${BUILD_NUMBER}/console"}' """)
         }
         failure {
-            sh(script:  """curl "https://api.github.com/repos/Sundeep55/ELK/statuses/${GIT_COMMIT}?access_token=34d6c62a303e5a3560f5c43765ca1e385c81ff07" \
+            sh(script:  """curl "https://api.github.com/repos/Sundeep55/ELK/statuses/${GIT_COMMIT}?access_token=${GIT_TOCKEN}" \
                             -H "Content-Type: application/json" \
                             -X POST \
                             -d '{"state": "failure","context": "continuous-integration/jenkins", "description": "Jenkins", "target_url": "http://15.207.4.186:8080/job/ELKStack/${BUILD_NUMBER}/console"}' """)
         }
         aborted {
-            sh(script:  """curl "https://api.github.com/repos/Sundeep55/StatusRepo/statuses/${GIT_COMMIT}?access_token=34d6c62a303e5a3560f5c43765ca1e385c81ff07" \
+            sh(script:  """curl "https://api.github.com/repos/Sundeep55/StatusRepo/statuses/${GIT_COMMIT}?access_token=${GIT_TOCKEN}" \
                             -H "Content-Type: application/json" \
                             -X POST \
                             -d '{"state": "error","context": "continuous-integration/jenkins", "description": "Jenkins", "target_url": "http://15.207.4.186:8080/job/ELKStack/${BUILD_NUMBER}/console"}' """)

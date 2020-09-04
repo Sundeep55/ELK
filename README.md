@@ -74,6 +74,7 @@ The repo uses deploy_config.yml file for deploying the cluster on __AWS__. Updat
    * Create a pipeline job and configure it to listen on github push requests
    * Add below mandatory credentials to jenkins
         - GitHub credentials
+        - Github OAuth tocken
         - DockerHUB credentials
         - AWS Access and Secret keys
 
