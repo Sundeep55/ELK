@@ -5,11 +5,6 @@ pipeline {
     }
     stages {
         stage('Build') {
-                        when {
-                expression {
-                    GIT_BRANCH == 'origin/master'
-                }
-            }
             steps {
                 sh(script:  """curl "https://api.github.com/repos/Sundeep55/ELK/statuses/${GIT_COMMIT}?access_token=${GIT_TOCKEN}" \
                               -H "Content-Type: application/json" \
@@ -20,11 +15,6 @@ pipeline {
             }
         }
         stage('Test') {
-                        when {
-                expression {
-                    GIT_BRANCH == 'origin/master'
-                }
-            }
             steps {
                 sh 'docker-compose up -d'
                 sleep(time:90,unit:"SECONDS")
