@@ -18,7 +18,7 @@ pipeline {
             steps {
                 sh 'docker-compose up -d'
                 sleep(time:90,unit:"SECONDS")
-                sh 'pytest -m sanity'
+                sh 'python3 -m pytest -m sanity'
             }
             post {
                 cleanup {
