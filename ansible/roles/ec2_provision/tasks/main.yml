@@ -4,3 +4,5 @@
 - include_tasks: install_minikube.yml
 - include_tasks: install_nginx.yml
 - include_tasks: copy_deployments.yml
+- pause:
+    seconds: 30

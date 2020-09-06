@@ -40,7 +40,12 @@
           - docker-ce-cli
           - containerd.io
 
-    - name: add ubuntu user to docker group
-      shell: usermod -aG docker ubuntu
+    - name: 'add users to docker group'
+      user:
+        name: '{{ item }}'
+        groups: 'docker'
+        append: 'yes'
+      with_items: '{{ docker_group_members }}'
+      when: 'docker_group_members is defined'
   when: docker_stat.stdout == ""
     

@@ -2,9 +2,12 @@
 - name: Start minikube cluster
   shell: "{{ item }}"
   loop:
-    - sudo usermod -aG docker ubuntu
+    # - sudo usermod -aG docker ubuntu
     - minikube start --driver=docker
     - minikube addons enable ingress
     - kubectl wait --namespace kube-system --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s
     - minikube addons enable ingress-dns
     - kubectl apply -f /home/ubuntu/k8s/
+    - kubectl wait --for=condition=ready pod --selector=component=kibana --timeout=120s
+    - kubectl wait --for=condition=ready pod --selector=component=logstash --timeout=120s
+    - kubectl wait --for=condition=ready pod --selector=component=elasticsearch --timeout=120s
