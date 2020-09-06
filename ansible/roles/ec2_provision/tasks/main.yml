@@ -4,5 +4,7 @@
 - include_tasks: install_minikube.yml
 - include_tasks: install_nginx.yml
 - include_tasks: copy_deployments.yml
+- meta: reset_connection
+- meta: flush_handlers 
 - pause:
     seconds: 30

@@ -42,12 +42,13 @@ The repo uses deploy_config.yml file for deploying the cluster on __AWS__. Updat
 
    * Run `docker-compose up`
    * Access the applications at below ports (http://localhost:<port>)
-    ----------------------------------------------------------
-    | Port | Application | 
-    |--|--|
-    | 5601 | Kibana |
-    | 9200 | Elasticsearch |
-    | 5044/9600 | Logstash |
+    
+----------------------------------------------------------
+| Port | Application | 
+|--|--|
+| 5601 | Kibana |
+| 9200 | Elasticsearch |
+| 5044/9600 | Logstash |
 
 ### Kubernetes on local system
 
@@ -55,12 +56,13 @@ The repo uses deploy_config.yml file for deploying the cluster on __AWS__. Updat
    * Run `kubectl apply -f k8s/`
    * Add `ansible/roles/kube_init/templates/local.conf` to `/etc/nginx/conf.d/` with updated values
    * Try to access the cluster at below url endpoints (http://localhost_ip/<endpoint>)
-    ----------------------------------------------------------
-    | Endpoint | Application | 
-    |--|--|
-    | /kibana/ | Kibana |
-    | /elasticsearch/ | Elasticsearch |
-    | /logstash/ or /logstash_ui/ | Logstash |
+
+----------------------------------------------------------
+| Endpoint | Application | 
+|--|--|
+| /kibana/ | Kibana |
+| /elasticsearch/ | Elasticsearch |
+| /logstash/ or /logstash_ui/ | Logstash |
 
 ### Deploy cluster on new EC2 instance 
  
