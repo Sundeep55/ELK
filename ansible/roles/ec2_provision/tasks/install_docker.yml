@@ -10,23 +10,19 @@
       apt:
         update_cache: yes
 
-    - name: install apt-transport-https, ca-certificates, curl, gnupg-agent and software-properties-common
+    - name: install required packages
       apt:
-        name:
-          - apt-transport-https 
-          - ca-certificates
-          - curl
-          - gnupg-agent
-          - software-properties-common
+        name: "{{ item }}"
+      loop: "{{ docker_required_packages }}"
 
     - name: Add docker official GPG key
       apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
+        url: "{{ docker_gpg_key }}"
         state: present
 
     - name: add docker repository
       apt_repository:
-        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
+        repo: "{{ docker_repo }}"
         state: present
     
     - name: update cache
@@ -35,17 +31,15 @@
 
     - name: install docker
       apt:
-        name: 
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
+        name: "{{ item }}"
+      loop: "{{ docker_packages }}"
+      notify: restart docker
 
     - name: 'add users to docker group'
       user:
         name: '{{ item }}'
         groups: 'docker'
         append: 'yes'
-      with_items: '{{ docker_group_members }}'
-      when: 'docker_group_members is defined'
+      loop: "{{ docker_group_members }}"
   when: docker_stat.stdout == ""
     

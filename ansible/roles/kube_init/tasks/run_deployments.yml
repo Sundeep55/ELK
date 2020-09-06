@@ -7,7 +7,17 @@
     - minikube addons enable ingress
     - kubectl wait --namespace kube-system --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s
     - minikube addons enable ingress-dns
-    - kubectl apply -f /home/ubuntu/k8s/
+
+- name: start deployment
+  k8s:
+    state: present
+    src: /home/ubuntu/k8s/{{item}}
+  loop:
+    - deployment_yamls
+
+- name: Wait for deployment
+  shell: "{{ item }}"
+  loop:
     - kubectl wait --for=condition=ready pod --selector=component=kibana --timeout=120s
     - kubectl wait --for=condition=ready pod --selector=component=logstash --timeout=120s
     - kubectl wait --for=condition=ready pod --selector=component=elasticsearch --timeout=120s

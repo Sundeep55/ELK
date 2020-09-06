@@ -1,8 +1,16 @@
 ---
-- name: update cache
-  apt:
-    update_cache: yes
+- name: check if nginx exists
+  command: which nginx 
+  register: nginx_stat
+  ignore_errors: yes
 
-- name: install nginx
-  apt:
-    name: nginx
+- name: install minikube if not already installed
+  block:
+  - name: update cache
+    apt:
+      update_cache: yes
+
+  - name: install nginx
+    apt:
+      name: nginx
+  when: nginx_stat.stdout == ""
