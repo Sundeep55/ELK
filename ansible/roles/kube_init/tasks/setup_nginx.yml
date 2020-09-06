@@ -1,0 +1,13 @@
+---
+- name: Get minikube IP
+  command: minikube ip
+  register: minikube_ip
+
+- name: copy the nginx config file to destination
+  template:
+    src: local.conf
+    dest: /etc/nginx/conf.d/
+  vars:
+    host_ip: "{{ansible_default_ipv4.address}}"
+    minikube_ip: "{{minikube_ip.stdout}}"
+  notify: restart nginx

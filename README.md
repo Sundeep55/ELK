@@ -13,6 +13,7 @@ ELK Stack fulfills the need log management and analytics space. Monitoring appli
 
    * Install [Python](https://www.python.org/downloads/) 
    * Install [Docker](https://docs.docker.com/engine/install/)
+   * Install [docker-compose](https://docs.docker.com/compose/install/)
    * Install [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and [minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) (Optional - Required only when deploying the cluster on local kubenretes)
    * Install [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) (Optional - Required only when deploying the cluster in AWS)
    * Clone the repo
@@ -52,11 +53,21 @@ The repo uses deploy_config.yml file for deploying the cluster on __AWS__. Updat
 
    * Run `minikube start --driver=docker`
    * Run `kubectl apply -f k8s/`
+   * Add `ansible/roles/kube_init/templates/local.conf` to `/etc/nginx/conf.d/` with updated values
+   * Try to access the cluster at below url endpoints (http://localhost_ip/<endpoint>)
+    ----------------------------------------------------------
+    | Endpoint | Application | 
+    |--|--|
+    | /kibana/ | Kibana |
+    | /elasticsearch/ | Elasticsearch |
+    | /logstash/ or /logstash_ui/ | Logstash |
 
 ### Deploy cluster on new EC2 instance 
  
-   * Update `ansible/vars/all.yml` file with appropriate values
-   * Run `ansible-playbook -e 'aws_access_key=ACCESS_KEY aws_secret_key=SECRET_KEY`
+   * Run `cd ansible`
+   * Update `vars/all.yml` file with appropriate values
+   * Run `ansible-playbook deploy_instalce.yml -e 'aws_access_key=ACCESS_KEY aws_secret_key=SECRET_KEY`
+   * Try to access the cluster at above mentioned url endpoints replacing the localhost_ip to Public IP of the instance
 
 # Automated Deployment (CICD)
 

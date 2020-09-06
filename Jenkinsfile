@@ -28,7 +28,7 @@ pipeline {
             steps {
                 sh 'docker-compose up -d'
                 sleep(time:90,unit:"SECONDS")
-                sh 'pytest'
+                sh 'pytest -m sanity'
             }
             post {
                 cleanup {
@@ -64,9 +64,9 @@ pipeline {
                 sh "minikube start --driver=docker"
                 sh "minikube addons enable ingress"
                 sh "kubectl wait --namespace kube-system --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s"
+                sh "minikube addons enable ingress-dns"
                 sh "kubectl apply -f k8s/"
                 sleep(time:120,unit:"SECONDS")
-                input 'Deploy to Production?'
             }
             post {
                 cleanup {
@@ -84,6 +84,7 @@ pipeline {
                 }
             }
             steps {
+                input 'Deploy to Production?'
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'awscreds',
                     usernameVariable: 'AWS_ACCESS_KEY', passwordVariable: 'AWS_SECRET_KEY']]) {
                     dir('ansible') {
