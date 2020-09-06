@@ -17,7 +17,7 @@ pipeline {
         stage('Test') {
             steps {
                 sh 'docker-compose up -d'
-                sleep(time:90,unit:"SECONDS")
+                sleep(time:80,unit:"SECONDS")
                 sh 'python3 -m pytest -m sanity'
             }
             post {
@@ -56,7 +56,10 @@ pipeline {
                 sh "kubectl wait --namespace kube-system --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s"
                 sh "minikube addons enable ingress-dns"
                 sh "kubectl apply -f k8s/"
-                sleep(time:120,unit:"SECONDS")
+                sh "kubectl wait --for=condition=ready pod --selector=component=kibana --timeout=120s"
+                sh "kubectl wait --for=condition=ready pod --selector=component=logstash --timeout=120s"
+                sh "kubectl wait --for=condition=ready pod --selector=component=elasticsearch --timeout=120s"
+                input 'proceed to cleanup?'
             }
             post {
                 cleanup {
@@ -74,7 +77,6 @@ pipeline {
                 }
             }
             steps {
-                input 'Deploy to Production?'
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'awscreds',
                     usernameVariable: 'AWS_ACCESS_KEY', passwordVariable: 'AWS_SECRET_KEY']]) {
                     dir('ansible') {

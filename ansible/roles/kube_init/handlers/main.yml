@@ -4,4 +4,5 @@
     name: nginx 
     state: restarted 
     enabled: yes
-  become: yes
+  vars:
+    ansible_become: yes

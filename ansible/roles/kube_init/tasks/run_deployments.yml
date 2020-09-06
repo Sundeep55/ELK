@@ -2,6 +2,7 @@
 - name: Start minikube cluster
   shell: "{{ item }}"
   loop:
+    - sudo usermod -aG docker ubuntu
     - minikube start --driver=docker
     - minikube addons enable ingress
     - kubectl wait --namespace kube-system --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s

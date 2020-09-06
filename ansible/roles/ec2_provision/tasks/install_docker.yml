@@ -41,6 +41,6 @@
           - containerd.io
 
     - name: add ubuntu user to docker group
-      shell: usermod -aG docker ubuntu && newgrp docker
+      shell: usermod -aG docker ubuntu
   when: docker_stat.stdout == ""
     

@@ -30,8 +30,8 @@
   roles:
     - role: ec2_provision
       vars:
-        become: true
+        ansible_become: true
     - role: kube_init
       vars:
-        become: false
+        ansible_become: false
       
