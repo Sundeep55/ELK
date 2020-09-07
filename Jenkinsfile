@@ -3,6 +3,9 @@ pipeline {
     environment { 
         GIT_TOCKEN = credentials('github_tocken') 
     }
+    options {
+        ansiColor('xterm')
+    }
     stages {
         stage('Build') {
             steps {

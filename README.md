@@ -81,7 +81,8 @@ The repo uses deploy_config.yml file for deploying the cluster on __AWS__. Updat
    * Install following plugins on Jenkins
         - Git
         - GitHub
-        - Ansible
+        - ansible
+        - ansiColor
    * Configure GitHUB in Jenkins
    * Add Github Webhook to your Git repository http://<JenkinsURL>/github-webhook
    * Create a pipeline job and configure it to listen on github push requests
