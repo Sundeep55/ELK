@@ -82,7 +82,7 @@ pipeline {
                     dir('ansible') {
                         ansiblePlaybook playbook: 'deploy_instance.yml', 
                                         inventory: 'inventory.ini',
-                                        extras: "-e aws_access_key=${AWS_ACCESS_KEY} aws_secret_key=${AWS_SECRET_KEY}"
+                                        extras: "-e 'aws_access_key=${AWS_ACCESS_KEY} aws_secret_key=${AWS_SECRET_KEY}'"
                     }
                 }
             }
