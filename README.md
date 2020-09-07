@@ -43,7 +43,6 @@ The repo uses deploy_config.yml file for deploying the cluster on __AWS__. Updat
    * Run `docker-compose up`
    * Access the applications at below ports (http://localhost:<port>)
     
-----------------------------------------------------------
 | Port | Application | 
 |--|--|
 | 5601 | Kibana |
@@ -57,7 +56,6 @@ The repo uses deploy_config.yml file for deploying the cluster on __AWS__. Updat
    * Add `ansible/roles/kube_init/templates/local.conf` to `/etc/nginx/conf.d/` with updated values
    * Try to access the cluster at below url endpoints (http://localhost_ip/<endpoint>)
 
-----------------------------------------------------------
 | Endpoint | Application | 
 |--|--|
 | /kibana/ | Kibana |
@@ -71,7 +69,11 @@ The repo uses deploy_config.yml file for deploying the cluster on __AWS__. Updat
    * Run `ansible-playbook deploy_instalce.yml -e 'aws_access_key=ACCESS_KEY aws_secret_key=SECRET_KEY`
    * Try to access the cluster at above mentioned url endpoints replacing the localhost_ip to Public IP of the instance
 
+----------------------------------------------------------
+
 # Automated Deployment (CICD)
+
+----------------------------------------------------------
 
 ## Environment setup
 
@@ -79,9 +81,8 @@ The repo uses deploy_config.yml file for deploying the cluster on __AWS__. Updat
    * Install following plugins on Jenkins
         - Git
         - GitHub
-        - Ansible
-        - Slave
-        - Pipeline
+        - ansible
+        - ansiColor
    * Configure GitHUB in Jenkins
    * Add Github Webhook to your Git repository http://<JenkinsURL>/github-webhook
    * Create a pipeline job and configure it to listen on github push requests
@@ -101,3 +102,4 @@ After the cluster is deployed in QA, pipeline will wait for users input (proceed
 
                                     BUILD --> TEST --> PUSH --> QA --> PROD
 
+----------------------------------------------------------
