@@ -5,11 +5,6 @@ pipeline {
     }
     stages {
         stage('Build') {
-                        when {
-                expression {
-                    GIT_BRANCH == 'origin/master'
-                }
-            }
             steps {
                 sh(script:  """curl "https://api.github.com/repos/Sundeep55/ELK/statuses/${GIT_COMMIT}?access_token=${GIT_TOCKEN}" \
                               -H "Content-Type: application/json" \
@@ -20,15 +15,10 @@ pipeline {
             }
         }
         stage('Test') {
-                        when {
-                expression {
-                    GIT_BRANCH == 'origin/master'
-                }
-            }
             steps {
                 sh 'docker-compose up -d'
-                sleep(time:90,unit:"SECONDS")
-                sh 'pytest'
+                sleep(time:80,unit:"SECONDS")
+                sh 'python3 -m pytest -m sanity'
             }
             post {
                 cleanup {
@@ -64,9 +54,12 @@ pipeline {
                 sh "minikube start --driver=docker"
                 sh "minikube addons enable ingress"
                 sh "kubectl wait --namespace kube-system --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s"
+                sh "minikube addons enable ingress-dns"
                 sh "kubectl apply -f k8s/"
-                sleep(time:120,unit:"SECONDS")
-                input 'Deploy to Production?'
+                sh "kubectl wait --for=condition=ready pod --selector=component=kibana --timeout=120s"
+                sh "kubectl wait --for=condition=ready pod --selector=component=logstash --timeout=120s"
+                sh "kubectl wait --for=condition=ready pod --selector=component=elasticsearch --timeout=120s"
+                input 'proceed to cleanup?'
             }
             post {
                 cleanup {

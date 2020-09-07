@@ -13,7 +13,7 @@
 
   - name: download minikube
     get_url:
-      url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+      url: "{{ minikube_download_url }}"
       dest: /tmp/minikube_download
 
   - name: copy minikube to bin

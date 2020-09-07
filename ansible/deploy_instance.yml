@@ -1,6 +1,7 @@
 ---
 - hosts: localhost
   connection: local
+  gather_facts: false
   vars_files:
     - vars/all.yml
   tasks:
@@ -22,15 +23,15 @@
         loop_var: elkhostname
 
 - hosts: elkhosts
-  gather_facts: false
+  gather_facts: true
   vars:
     ansible_ssh_user: ubuntu
     ansible_ssh_private_key_file: /opt/secrets/jenkinskeypair.pem
   roles:
     - role: ec2_provision
       vars:
-        become: true
+        ansible_become: true
     - role: kube_init
       vars:
-        become: false
+        ansible_become: false
       

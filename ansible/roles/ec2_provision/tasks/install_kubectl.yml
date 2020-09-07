@@ -12,20 +12,24 @@
 
     - name: install apt-transport-https and gnupg2
       apt:
-        name:
-          - apt-transport-https 
-          - gnupg2
+        name: "{{ item }}"
+      loop: "{{ kubectl_required_packages }}"
 
     - name: Add kube official GPG key
       apt_key:
-        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        url: "{{ kubectl_gpg_key }}"
         state: present
+
+    - name: create kubernetes file
+      file:
+        path: "{{ kubelist_file }}"
+        state: touch
 
     - name: Add kubectl packge repo to packages list
       lineinfile:
         insertafter: EOF
-        line: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
-        path: /etc/apt/sources.list.d/kubernetes.list
+        line: "{{ kubectl_repo }}"
+        path: "{{ kubelist_file }}"
 
     - name: update cache
       apt:

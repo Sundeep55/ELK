@@ -1,0 +1,15 @@
+---
+deployment_yamls:
+- elasticsearch_pvc.yml
+- elasticsearch_configmap.yml
+- logstash_configmap.yml
+- kibana_configmap.yml
+- elasticsearch_service.yml
+- ingress-service.yml
+- kibana_service.yml
+- logstash_service.yml
+- elasticsearch_deployment.yml
+- logstash_deployment.yml
+- kibana_deployment.yml
+
+
