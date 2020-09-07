@@ -59,7 +59,6 @@ pipeline {
                 sh "kubectl wait --for=condition=ready pod --selector=component=kibana --timeout=120s"
                 sh "kubectl wait --for=condition=ready pod --selector=component=logstash --timeout=120s"
                 sh "kubectl wait --for=condition=ready pod --selector=component=elasticsearch --timeout=120s"
-                sh 'python3 -m pytest -m qa'
                 input 'proceed to cleanup?'
             }
             post {
