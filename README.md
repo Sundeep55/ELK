@@ -60,7 +60,7 @@ The repo uses deploy_config.yml file for deploying the cluster on __AWS__. Updat
 |--|--|
 | /kibana/ | Kibana |
 | /elasticsearch/ | Elasticsearch |
-| /logstash/ or /logstash_ui/ | Logstash |
+| /logstash/ or /logstash_api/ | Logstash |
 
 ### Deploy cluster on new EC2 instance 
  

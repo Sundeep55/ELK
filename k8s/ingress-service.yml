@@ -21,7 +21,7 @@ spec:
       - backend:
           serviceName: logstash-service
           servicePort: 9600
-        path: /logstash_ui/?(.*)
+        path: /logstash_api/?(.*)
       - backend:
           serviceName: logstash-service
           servicePort: 5044
